@@ -15,6 +15,7 @@ const { domain, clientID, clientSecret } = require('../config').auth0;
 
 // define port
 const port = 3000;
+
 // our database connection information
 const connectionString = `postgres://${dbUser}@localhost/${database}`;
 
@@ -52,8 +53,9 @@ passport.use(new Auth0Strategy({
      //Find user in database
      console.log(profile.id);
      const db = app.get('db');
+     // .then means this is a promise
      db.getUserByAuthId([profile.id]).then((user, err) => {
-       if (!user) { //if there isn't one, we'll create one!
+       if (!user) { //if there isn't a user, we'll create one!
          console.log('CREATING USER');
          db.createUserByAuth([profile.displayName, profile.id]).then((user, err) => {
            console.log('USER CREATED', user[0]);
@@ -72,14 +74,14 @@ passport.use(new Auth0Strategy({
      done(null, user);
  });
 
- // pull use from session for manipulation
+ // pull user from session for manipulation
  passport.deserializeUser((user, done) => {
      console.log(user);
      done(null, user);
  });
 
 
- // Endpoints
+ // General Endpoints
 app.get('/api/test', (req, res, next) => {
     app.get('db').users.find({}).then(response => {
         res.json(response);
@@ -97,12 +99,15 @@ app.get('/auth/callback',
     passport.authenticate('auth0', { successRedirect: '/' }), (req, res) => {
         res.status(200).json(req.user);
 });
+
 // if not logged in, send error message and catch in resolve
 // else send user
 app.get('/auth/me', (req, res) => {
     if (!req.user) return res.status(401).json({err: 'User Not Authenticated'});
     res.status(200).json(req.user);
 });
+
+// remove user from session
 app.get('/auth/logout', (req, res) => {
     req.logout();
     res.redirect('/');
