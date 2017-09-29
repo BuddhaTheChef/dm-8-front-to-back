@@ -1,0 +1,8 @@
+<h1>HOME</h1>
+<h1 ng-if="!user.authid">{{user}}</h1>
+<div ng-if="user.authid">
+    <h1>{{user.authid}}</h1>
+    <h1>{{user.username}}</h1>
+</div>
+<button ui-sref="login">Login!</button>
+<a href="/auth/logout"><button>Logout!</button></a>
