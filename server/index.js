@@ -88,7 +88,11 @@ app.get('/api/test', (req, res, next) => {
 
 
 // auth endpoints
+
+// initial endpoint to fire off login
 app.get('/auth', passport.authenticate('auth0'));
+
+// redirect to home and use the resolve to catch the user
 app.get('/auth/callback',
     passport.authenticate('auth0', { successRedirect: '/' }), (req, res) => {
         res.status(200).json(req.user);
