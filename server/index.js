@@ -55,7 +55,8 @@ passport.use(new Auth0Strategy({
      const db = app.get('db');
      // .then means this is a promise
      db.getUserByAuthId([profile.id]).then((user, err) => {
-       if (!user) { //if there isn't a user, we'll create one!
+         console.log('INITIAL: ', user);
+       if (!user[0]) { //if there isn't a user, we'll create one!
          console.log('CREATING USER');
          db.createUserByAuth([profile.displayName, profile.id]).then((user, err) => {
            console.log('USER CREATED', user[0]);

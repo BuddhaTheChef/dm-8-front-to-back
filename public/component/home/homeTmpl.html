@@ -7,6 +7,6 @@
     <h1>{{user.username}}</h1>
 </div>
 <!-- Go to Login View -->
-<button ui-sref="login">Login!</button>
-<!-- Logout your user -->
-<a href="/auth/logout"><button>Logout!</button></a>
+<a class="transition" ui-sref="login" ng-if="!user.authid"><span>login</span></a>
+<!-- Logout your user, if not user, button won't display -->
+<a class="transition" href="/auth/logout" ng-if="user.authid"><span>logout!</span></a>
